@@ -18,10 +18,12 @@ runs:
     - name: Cleanup
       shell: bash
       run: |
+        echo "Cleaning up workspace area ..."
         # include hidden files
         # https://askubuntu.com/questions/740805/how-can-i-remove-all-files-from-current-directory-using-terminal
         [[ "${{ inputs.include-hidden }}" == "true" ]] && shopt -s dotglob
         rm -rf *
         for ADDITIONAL_RESOURCE in $(echo "${{ inputs.additional-resources }}" | xargs); do
+          echo "Removing ${ADDITIONAL_RESOURCE} ..."
           rm -rf ${ADDITIONAL_RESOURCE}
         done
