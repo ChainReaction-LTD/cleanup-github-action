@@ -1,0 +1,27 @@
+---
+name: cleanup-github-action
+author: Yakir Magriso
+description: Workspace cleanup GitHub action (for self-hosted GitHub runners)
+inputs:
+  include-hidden:
+    description: "Include hidden files and directories (default: true)"
+    required: false
+    default: "true"
+  additional-resources:
+    description: "Additional resources to cleanup (comma-separated)"
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Cleanup
+      shell: bash
+      run: |
+        # include hidden files
+        # https://askubuntu.com/questions/740805/how-can-i-remove-all-files-from-current-directory-using-terminal
+        [[ "${{ inputs.include-hidden }}" == "true" ]] && shopt -s dotglob
+        rm -rf *
+        for ADDITIONAL_RESOURCE in $(echo "${{ inputs.additional-resources }}" | xargs); do
+          rm -rf ${ADDITIONAL_RESOURCE}
+        done
